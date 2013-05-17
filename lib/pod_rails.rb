@@ -18,7 +18,9 @@ module PodRails
     server ||= "http://pod.fores.ee"
     # uri = URI.parse("#{PodRails.config.server}/convert/")
     uri = URI.parse("#{server}/convert/")
-    params = {filename: options[:name], html: options[:document_content]}
+    compressed_html = ActiveSupport::Gzip::Stream.compress(options[:document_content])
+    # params = {filename: options[:name], html: options[:document_content]}
+    params = {filename: options[:name], html: compressed_html}
     begin
       response=Net::HTTP.post_form(uri, params)
     rescue SocketError
